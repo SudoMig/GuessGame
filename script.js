@@ -1,15 +1,14 @@
 'use strict';
 
 let message = document.querySelector('.message');
-const number = document.querySelector('.number');
-let secretNumber = Math.floor(Math.random(1) * 20);
-const winner = document.body;
-const btn = document.getElementById('btn');
+let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let currentScore = 20;
 let highScore = '';
 
-console.log(secretNumber);
+const number = document.querySelector('.number');
+const btn = document.getElementById('btn');
 
+//  Checks for new highscore
 function HighScore() {
   if (highScore < currentScore) {
     highScore = currentScore;
@@ -17,40 +16,56 @@ function HighScore() {
   }
 }
 
-winner.classList.remove('winner');
+function displayMessage(message) {
+  document.querySelector('.message').textContent = message;
+}
 
-function userGuess() {
+function displayWinner(color) {
+  document.querySelector('body').style.backgroundColor = color;
+}
+
+// Checks Player guesses
+function playerGuess() {
   let guess = document.querySelector('.guess').value;
   let score = document.querySelector('.score');
 
-  if (currentScore === 0) {
-    message.textContent = 'You Lost, Game Over.';
-    btn.disabled = true;
+  // Checks if player guessed
+  if (!guess || guess == 0) {
+    displayMessage('⛔ No number!');
+
+    // Checks if guess is correct ---> win
   } else if (guess == secretNumber) {
-    message.textContent = 'Correct Number!';
+    message.textContent = '🎉 Correct Number!';
     number.textContent = secretNumber;
-    winner.classList.add('winner');
+    displayWinner('#50C878');
     HighScore();
     btn.disabled = true;
-  } else if (guess > secretNumber) {
-    message.textContent = 'Number is too High';
-    currentScore = currentScore - 1;
-    score.textContent = currentScore;
-  } else if (guess < secretNumber) {
-    message.textContent = 'Number is too Low';
-    currentScore = currentScore - 1;
-    score.textContent = currentScore;
-  } else {
-    console.log('This is a bug');
+
+    // checks if guess is greater or lower
+  } else if (guess !== secretNumber) {
+    if (currentScore > 1) {
+      displayMessage(
+        guess > secretNumber ? '📈 Number is too High' : '📉 Number is too Low'
+      );
+      currentScore = currentScore - 1;
+      score.textContent = currentScore;
+    //   Check if player out of guesses ---> lost
+    } else {
+      displayMessage('😱 You lost the game!');
+      btn.disabled = true;
+    }
   }
 }
 
+// Resets game but keeps highScore
 function again() {
-  winner.classList.remove('winner');
-  number.textContent = '?';
-  message.textContent = 'Start guessing...';
-  document.querySelector('.score').textContent = 20;
   currentScore = 20;
-  document.querySelector('.guess').value = 0;
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
+
+  number.textContent = '?';
+  displayMessage('Start guessing...');
+  displayWinner('#222');
+  document.querySelector('.score').textContent = 20;
+  document.querySelector('.guess').value = null;
   btn.disabled = false;
 }
