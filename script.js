@@ -5,18 +5,19 @@ const number = document.querySelector('.number');
 let secretNumber = Math.floor(Math.random() * 20);
 const winner = document.body;
 const btn = document.getElementById('btn');
-let currentScore = 10;
+let currentScore = 20;
 let highScore = '';
 
 console.log(secretNumber);
 
 function HighScore() {
   console.log('run 1', currentScore);
-  console.log(highScore);
+  console.log('highScore:',highScore);
 
-  if (highScore > currentScore) {
+  if (highScore < currentScore) {
     highScore = currentScore;
-    console.log('runned');
+    document.querySelector('.highscore').textContent = highScore
+    console.log('highScore After', highScore);
   }
 }
 
@@ -44,4 +45,9 @@ function userGuess() {
       btn.disabled = true;
     }
   }
+}
+
+
+function again() {
+    
 }
